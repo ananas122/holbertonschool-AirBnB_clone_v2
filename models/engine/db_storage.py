@@ -3,6 +3,7 @@
 import os
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, scoped_session
+from models import storage
 
 
 class DBStorage:
@@ -26,12 +27,13 @@ class DBStorage:
 
     def all(self, cls=None):
         """Queries on the current database session"""
-        from models import classes
+        from models import storage
         from models.base_model import Base
         obj_dict = {}
         if cls:
             if isinstance(cls, str):
-                cls = classes.get(cls, None)
+                cls = storage._FileStorage__classes.get(cls, None)
+
             if cls:
                 for obj in self.__session.query(cls).all():
                     key = "{}.{}".format(type(obj).__name__, obj.id)
@@ -65,3 +67,7 @@ class DBStorage:
         Base.metadata.create_all(self.__engine)
         session_factory = sessionmaker(bind=self.__engine, expire_on_commit=False)
         self.__session = scoped_session(session_factory)
+
+    def close(self):
+        """remove method: remove the session"""
+        self.__session.close()
