@@ -40,13 +40,13 @@ class DBStorage():
         all_class = [City, State, User, Place, Review, Amenity]
         list_objects = []
         if cls is None:
-            for i in range(len(all_class)):
-                list_objects += self.__session.query(all_class[i]).all()
+            for all_clas in all_class:
+                list_objects += self.__session.query(all_clas).all()
         else:
             list_objects += self.__session.query(cls).all()
 
         for element in list_objects:
-            key = "{}.{}".format(element.__class__.__name__, element.id)
+            key = f"{element.__class__.__name__}.{element.id}"
             new_dict[key] = element
         return new_dict
 
