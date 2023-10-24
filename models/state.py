@@ -19,9 +19,9 @@ class State(BaseModel, Base):
         @property
         def cities(self):
             """returns the list of City instances"""
-            new_list = []
             all_cities = storage.all(City)
-            for element in all_cities.values():
-                if self.id == element.state_id:
-                    new_list.append(element)
-            return new_list
+            return [
+                element
+                for element in all_cities.values()
+                if self.id == element.state_id
+            ]
